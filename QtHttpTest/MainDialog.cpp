@@ -6,6 +6,7 @@
 #include <QMessageBox>
 #include <QDir>
 #include <QTextCodec>
+#include <QString>
 
 MainDialog::MainDialog(QWidget *parent) :
     QDialog(parent),
@@ -86,17 +87,32 @@ void MainDialog::showLog(const int &row)
 {
 
     QFile file(https[row]->getLogFileName());
-    if(!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        qDebug()<<"Can't open the file!"<<endl;
-    }
-    QString result;
-    while(!file.atEnd()) {
-        QByteArray line = file.readLine();
-        QString str(line);
-        result += str;
-    }
-    logLabel->setText((result));
-    logLabel->show();
+//    if(!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+//        qDebug()<<"Can't open the file!"<<endl;
+//    }
+//    QString result;
+//    while(!file.atEnd()) {
+
+//           file.setCodec("GBK");
+//        QByteArray line = file.readLine();
+//        QString str(line);
+//        result += str;
+//    }
+//     QTextCodec::setCodecForTr(QTextCodec::codecForLocale());
+//    qDebug()<< QObject::tr(result);
+
+
+       if (file.open(QFile::ReadOnly | QFile::Text))
+         {
+             QTextStream toText(&file);
+           //设置文件流编码方式
+               toText.setCodec("GBK");
+//               textEdit->setPlainText(toText.readAll());
+               logLabel->setText((toText.readAll()));
+               logLabel->show();
+         }
+
+
 }
 
 
