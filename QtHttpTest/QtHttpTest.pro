@@ -20,3 +20,6 @@ HEADERS  += MainDialog.h \
     HttpFun.h
 
 FORMS    += MainDialog.ui
+
+RESOURCES += \
+    images.qrc

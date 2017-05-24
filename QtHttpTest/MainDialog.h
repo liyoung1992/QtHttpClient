@@ -43,6 +43,8 @@ private slots:
     //开始所有
     void on_allStartPbtn_clicked();
 
+
+
 private:
     Ui::MainDialog *ui;
     QQueue<HttpFun*> https;

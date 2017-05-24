@@ -47,10 +47,10 @@ void MainDialog::addItemToWidget(const QString &strUrl, const QString &title, co
     ui->tableWidget->setItem(rowCount,4,new QTableWidgetItem(start + "-" + end));
     ui->tableWidget->setItem(rowCount,5,new QTableWidgetItem("正在请求"));
     ui->tableWidget->setItem(rowCount,6,new QTableWidgetItem("1"));
-    ui->tableWidget->setItem(rowCount,7,new QTableWidgetItem("暂停"));
-    ui->tableWidget->setItem(rowCount,8,new QTableWidgetItem("编辑"));
-    ui->tableWidget->setItem(rowCount,9,new QTableWidgetItem("删除"));
-    ui->tableWidget->setItem(rowCount,10,new QTableWidgetItem("查看日志"));
+    ui->tableWidget->setItem(rowCount,7,new QTableWidgetItem(QIcon(QPixmap(":/file/images/pause.png")),tr("暂停")));
+    ui->tableWidget->setItem(rowCount,8,new QTableWidgetItem(QIcon(QPixmap(":/file/images/edit.jpg")),tr("编辑")));
+    ui->tableWidget->setItem(rowCount,9,new QTableWidgetItem(QIcon(QPixmap(":/file/images/delete.png")),tr("删除")));
+    ui->tableWidget->setItem(rowCount,10,new QTableWidgetItem(QIcon(QPixmap(":/file/images/show.jpg")),tr("查看日志")));
 //设置文字居中
     ui->tableWidget->item(rowCount,0)->setTextAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
     ui->tableWidget->item(rowCount,1)->setTextAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
@@ -179,10 +179,12 @@ void MainDialog::slot_clickItem(const int &row, const int &col)
         if(itemText == "暂停"){
             ui->tableWidget->item(row,5)->setText("暂停中");
             ui->tableWidget->item(row,col)->setText("开始");
+            ui->tableWidget->item(row,col)->setIcon(QIcon(QPixmap(":/file/images/player.png")));
             https[row]->closeIntervalTimer();
         }else{
             ui->tableWidget->item(row,5)->setText("正在请求");
             ui->tableWidget->item(row,col)->setText("暂停");
+            ui->tableWidget->item(row,col)->setIcon(QIcon(QPixmap(":/file/images/pause.png")));
             https[row]->startIntervalTimer();
         }
 
@@ -229,12 +231,13 @@ void MainDialog::on_allStopPbtn_clicked()
 {
     int rowCount = ui->tableWidget->rowCount();
     for(int i = 0;i < rowCount; i++){
-        ui->tableWidget->item(i,5)->setText("已暂停");
+        ui->tableWidget->item(i,5)->setText("暂停中");
 
        QString itemText = ui->tableWidget->item(i,7)->text();
        //开始暂停
        if(itemText == "暂停"){
            ui->tableWidget->item(i,7)->setText("开始");
+           ui->tableWidget->item(i,7)->setIcon(QIcon(QPixmap(":/file/images/player.png")));
            https[i]->closeIntervalTimer();
        }
     }
@@ -246,11 +249,13 @@ void MainDialog::on_allStartPbtn_clicked()
 {
     int rowCount = ui->tableWidget->rowCount();
     for(int i = 0;i < rowCount; i++){
-           ui->tableWidget->item(i,5)->setText("正在请求");
+        ui->tableWidget->item(i,5)->setText("正在请求");
+
        QString itemText = ui->tableWidget->item(i,7)->text();
        //开始暂停
        if(itemText == "开始"){
            ui->tableWidget->item(i,7)->setText("暂停");
+            ui->tableWidget->item(i,7)->setIcon(QIcon(QPixmap(":/file/images/pause.png")));
            https[i]->startIntervalTimer();
        }
     }
@@ -271,3 +276,5 @@ void MainDialog::on_allStartPbtn_clicked()
 //    ui->textBrowser->append(QString::number(pHttpFun->judgeTime("17:50:50","17:52:52")));
 
 //}
+
+
