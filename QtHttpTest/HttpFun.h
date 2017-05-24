@@ -33,6 +33,9 @@ public:
     int judgeTime(const QString& start,const QString& end);
     void log(const QString& log_str);
     QString  getLogFileName();
+    QString  getRequestState();
+    void setRequestState(const QString &state);
+    QString  getRequestTimes();
 signals:
     //http请求结束
     void signal_requestFinished(bool bSuccess,const QString& strResult);
@@ -67,6 +70,10 @@ private:
     QString m_pTitle;
     //log文件名
     QString m_pLogFileName;
+    //访问次数
+    long m_pRequestTimes;
+    //访问状态
+    QString m_pRequestState;
 
 };
 

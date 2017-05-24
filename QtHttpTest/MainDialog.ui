@@ -100,7 +100,7 @@
        <item>
         <widget class="QTimeEdit" name="startTimeEdit">
          <property name="displayFormat">
-          <string>H:mm:ss</string>
+          <string>HH:mm:ss</string>
          </property>
          <property name="time">
           <time>

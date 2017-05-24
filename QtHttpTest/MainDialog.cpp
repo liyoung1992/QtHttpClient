@@ -19,6 +19,10 @@ MainDialog::MainDialog(QWidget *parent) :
     connect(ui->requestBtn,SIGNAL(clicked()),this,SLOT(slot_requestBtnClicked()));
     //点击item
     connect(ui->tableWidget,SIGNAL(cellClicked(int, int)),this,SLOT(slot_clickItem(int,int)));
+    //定时刷新各请求状态
+    m_pFlushTimer = new QTimer();
+    connect(m_pFlushTimer,SIGNAL(timeout()),this,SLOT(slot_flushWidget()));
+    m_pFlushTimer->start(10000);
 }
 
 MainDialog::~MainDialog()
@@ -41,8 +45,8 @@ void MainDialog::addItemToWidget(const QString &strUrl, const QString &title, co
     ui->tableWidget->setItem(rowCount,2,new QTableWidgetItem(QString::number(intervalTime)));
     ui->tableWidget->setItem(rowCount,3,new QTableWidgetItem(QString::number(outTime)));
     ui->tableWidget->setItem(rowCount,4,new QTableWidgetItem(start + "-" + end));
-    ui->tableWidget->setItem(rowCount,5,new QTableWidgetItem("正常"));
-    ui->tableWidget->setItem(rowCount,6,new QTableWidgetItem("1000"));
+    ui->tableWidget->setItem(rowCount,5,new QTableWidgetItem("正在请求"));
+    ui->tableWidget->setItem(rowCount,6,new QTableWidgetItem("1"));
     ui->tableWidget->setItem(rowCount,7,new QTableWidgetItem("暂停"));
     ui->tableWidget->setItem(rowCount,8,new QTableWidgetItem("编辑"));
     ui->tableWidget->setItem(rowCount,9,new QTableWidgetItem("删除"));
@@ -58,7 +62,7 @@ void MainDialog::addItemToWidget(const QString &strUrl, const QString &title, co
     ui->tableWidget->item(rowCount,7)->setTextAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
     ui->tableWidget->item(rowCount,8)->setTextAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
     ui->tableWidget->item(rowCount,9)->setTextAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
-      ui->tableWidget->item(rowCount,10)->setTextAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
+    ui->tableWidget->item(rowCount,10)->setTextAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
 
 //设置操作项目不可编辑
     ui->tableWidget->item(rowCount,0)->setFlags(ui->tableWidget->item(rowCount,0)->flags() & ~Qt::ItemIsEditable);
@@ -173,9 +177,11 @@ void MainDialog::slot_clickItem(const int &row, const int &col)
     if(col == 7){
         //开始暂停
         if(itemText == "暂停"){
+            ui->tableWidget->item(row,5)->setText("暂停中");
             ui->tableWidget->item(row,col)->setText("开始");
             https[row]->closeIntervalTimer();
         }else{
+            ui->tableWidget->item(row,5)->setText("正在请求");
             ui->tableWidget->item(row,col)->setText("暂停");
             https[row]->startIntervalTimer();
         }
@@ -189,6 +195,15 @@ void MainDialog::slot_clickItem(const int &row, const int &col)
     }else if(col == 10){
         qDebug()<< "查看日志";
         showLog(row);
+    }
+}
+
+void MainDialog::slot_flushWidget()
+{
+    int rowCount = ui->tableWidget->rowCount();
+    for(int i = 0;i < rowCount; i++){
+           ui->tableWidget->item(i,5)->setText(https[i]->getRequestState());
+           ui->tableWidget->item(i,6)->setText(https[i]->getRequestTimes());
     }
 }
 
@@ -214,6 +229,8 @@ void MainDialog::on_allStopPbtn_clicked()
 {
     int rowCount = ui->tableWidget->rowCount();
     for(int i = 0;i < rowCount; i++){
+        ui->tableWidget->item(i,5)->setText("已暂停");
+
        QString itemText = ui->tableWidget->item(i,7)->text();
        //开始暂停
        if(itemText == "暂停"){
@@ -229,6 +246,7 @@ void MainDialog::on_allStartPbtn_clicked()
 {
     int rowCount = ui->tableWidget->rowCount();
     for(int i = 0;i < rowCount; i++){
+           ui->tableWidget->item(i,5)->setText("正在请求");
        QString itemText = ui->tableWidget->item(i,7)->text();
        //开始暂停
        if(itemText == "开始"){

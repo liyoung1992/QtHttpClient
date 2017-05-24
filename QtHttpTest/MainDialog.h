@@ -6,6 +6,7 @@
 #include <QQueue>
 #include <QDateTime>
 #include <QLabel>
+#include <QTimer>
 namespace Ui {
 class MainDialog;
 }
@@ -29,23 +30,24 @@ private:
     void showLog(const int &row);
 
 private slots:
-    void slot_requestBtnClicked();//请求按钮点击
-    void slot_requestFinished(bool bSuccess, const QString& strResult); //http请求结束
+    //请求按钮点击
+    void slot_requestBtnClicked();
+    //http请求结束
+    void slot_requestFinished(bool bSuccess, const QString& strResult);
     //点击item
     void slot_clickItem(const int& row,const int& col);
-//    void on_pushButton_clicked();
-
-
+    //定时刷新槽函数
+    void slot_flushWidget();
+    //暂停所有
     void on_allStopPbtn_clicked();
-
+    //开始所有
     void on_allStartPbtn_clicked();
-
-//    void on_pushButton_2_clicked();
 
 private:
     Ui::MainDialog *ui;
     QQueue<HttpFun*> https;
     QLabel *logLabel;
+    QTimer *m_pFlushTimer;
 };
 
 #endif // MAINDIALOG_H

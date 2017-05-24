@@ -1,6 +1,7 @@
 #include "HttpFun.h"
 #include <QTextCodec>
 #include <QMessageBox>
+#include <QDir>
 
 const int nHTTP_TIME = 10000; //10秒
 
@@ -14,6 +15,8 @@ HttpFun::HttpFun(QObject *parent) :
     m_pStartTime = "00:00:00";
     m_pEndTime = "23:39:59";
     m_pTitle = "标题";
+    m_pRequestTimes = 1;
+    m_pRequestState = "正在请求";
     m_pOutTimer = new QTimer;
     connect(m_pOutTimer,SIGNAL(timeout()),this,SLOT(slot_requestTimeout()));
 }
@@ -71,21 +74,32 @@ void HttpFun::sendRequest(const QString &strUrl,const int &outTime,const int &in
 //关闭时间间隔的计时器
 void HttpFun::closeIntervalTimer()
 {
+    m_pRequestState = "暂停中";
     m_pIntervalTimer->stop();
     m_pOutTimer->stop();
 }
 //开始间隔时间的计时器
 void HttpFun::startIntervalTimer()
 {
+    m_pRequestState = "正在请求";
     m_pIntervalTimer->start(m_pIntervalTime);
 }
 
 //判断时间，在时间内返回1，否则返回-1
 int HttpFun::judgeTime(const QString &start, const QString &end)
 {
-    QDateTime time = QDateTime::currentDateTime();//获取系统现在的时间
-    QString currTime = time.toString("hh:mm:ss"); //设置显示格式
-    if((QString::compare(currTime,start) > 0) && (QString::compare(end,currTime) > 0)){
+    QTime currTime = QTime::currentTime();//获取系统现在的时间
+    QTime startTime = QTime::fromString(start);
+    QTime endTime = QTime::fromString(end);
+
+    int startTimeStamp = (startTime.hour())*3600 + (startTime.minute())*60 + startTime.second();
+    int currTimeStamp = currTime.hour()*3600 + currTime.minute()*60 + currTime.second();
+    int endTimeStamp = endTime.hour()*3600 + endTime.minute()*60 + endTime.second();
+
+    qDebug() << "当前时间:" + QString::number(currTimeStamp>=startTimeStamp);
+    qDebug() << "结束时间:" + QString::number(endTimeStamp>=currTimeStamp);
+
+    if((startTimeStamp <= currTimeStamp) && (currTimeStamp <= endTimeStamp)){
         return 1;
     }
     return -1;
@@ -97,7 +111,11 @@ void HttpFun::log(const QString &log_str)
     QString currTime = time.toString("yyyy-MM-dd hh:mm:ss"); //设置显示格式
     QString log_result = "请求URL:" + m_strUrl + " ; " + "请求时间:" + currTime +" ; " + "请求结果:" + log_str;
 
-    QString fileName = m_pTitle +"_" + time.toString("yyyy-MM-dd") + ".txt";
+    QDir *TEST = new QDir;
+       bool exist = TEST->exists("log");
+       if(!exist)
+             bool ok = TEST->mkdir("log");
+    QString fileName = "log/" + m_pTitle +"_" + time.toString("yyyy-MM-dd") + ".txt";
     m_pLogFileName = fileName;
     QString str = log_result;
     QFile file(fileName);
@@ -114,6 +132,21 @@ void HttpFun::log(const QString &log_str)
 QString HttpFun::getLogFileName()
 {
     return m_pLogFileName;
+}
+
+QString HttpFun::getRequestState()
+{
+    return m_pRequestState;
+}
+
+void HttpFun::setRequestState(const QString &state)
+{
+    m_pRequestState = state;
+}
+
+QString HttpFun::getRequestTimes()
+{
+    return QString::number(m_pRequestTimes);
 }
 
 //请求结束
@@ -170,6 +203,7 @@ void HttpFun::slot_intervalTimeRequest(){
         //超时信号
     //    QTimer::singleShot(m_pOutTime,this, SLOT(slot_requestTimeout()));
         m_pOutTimer->start(m_pOutTime);
+        m_pRequestTimes += 1;
     }
 }
 
