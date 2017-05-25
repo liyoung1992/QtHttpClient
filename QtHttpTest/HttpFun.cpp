@@ -168,7 +168,7 @@ void HttpFun::slot_requestFinished()
         log("请求失败！");
         emit signal_requestFinished(false,strResult);//请求失败
     }
-//    m_pNetworkReply->deleteLater();
+     m_pNetworkReply->deleteLater();
 //    this->deleteLater(); //释放内存
 }
 
@@ -176,7 +176,7 @@ void HttpFun::slot_requestFinished()
 void HttpFun::slot_requestTimeout()
 {
     emit signal_requestFinished(false,"timeout");//请求失败
-//    m_pNetworkReply->deleteLater();
+    m_pNetworkReply->deleteLater();
 //    this->deleteLater();//释放内存
 }
 
@@ -186,7 +186,8 @@ void HttpFun::slot_intervalTimeRequest(){
         QNetworkRequest netRequest;
         netRequest.setHeader(QNetworkRequest::ContentTypeHeader,"application/x-www-form-urlencoded");
         netRequest.setUrl(QUrl(m_strUrl)); //地址信息
-        if(m_strUrl.toLower().startsWith("https"))//https请求，需ssl支持(下载openssl拷贝libeay32.dll和ssleay32.dll文件至Qt bin目录或程序运行目录)
+        //https请求，需ssl支持(下载openssl拷贝libeay32.dll和ssleay32.dll文件至Qt bin目录或程序运行目录)
+        if(m_strUrl.toLower().startsWith("https"))
         {
             QSslConfiguration sslConfig;
             sslConfig.setPeerVerifyMode(QSslSocket::VerifyNone);

@@ -51,7 +51,7 @@ void MainDialog::addItemToWidget(const QString &strUrl, const QString &title, co
     ui->tableWidget->setItem(rowCount,8,new QTableWidgetItem(QIcon(QPixmap(":/file/images/edit.jpg")),tr("编辑")));
     ui->tableWidget->setItem(rowCount,9,new QTableWidgetItem(QIcon(QPixmap(":/file/images/delete.png")),tr("删除")));
     ui->tableWidget->setItem(rowCount,10,new QTableWidgetItem(QIcon(QPixmap(":/file/images/show.jpg")),tr("查看日志")));
-//设置文字居中
+    //设置文字居中
     ui->tableWidget->item(rowCount,0)->setTextAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
     ui->tableWidget->item(rowCount,1)->setTextAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
     ui->tableWidget->item(rowCount,2)->setTextAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
@@ -64,7 +64,7 @@ void MainDialog::addItemToWidget(const QString &strUrl, const QString &title, co
     ui->tableWidget->item(rowCount,9)->setTextAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
     ui->tableWidget->item(rowCount,10)->setTextAlignment(Qt::AlignHCenter|Qt::AlignVCenter);
 
-//设置操作项目不可编辑
+    //设置操作项目不可编辑
     ui->tableWidget->item(rowCount,0)->setFlags(ui->tableWidget->item(rowCount,0)->flags() & ~Qt::ItemIsEditable);
     ui->tableWidget->item(rowCount,1)->setFlags(ui->tableWidget->item(rowCount,1)->flags() & ~Qt::ItemIsEditable);
     ui->tableWidget->item(rowCount,2)->setFlags(ui->tableWidget->item(rowCount,2)->flags() & ~Qt::ItemIsEditable);
@@ -91,19 +91,6 @@ void MainDialog::showLog(const int &row)
 {
 
     QFile file(https[row]->getLogFileName());
-//    if(!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-//        qDebug()<<"Can't open the file!"<<endl;
-//    }
-//    QString result;
-//    while(!file.atEnd()) {
-
-//           file.setCodec("GBK");
-//        QByteArray line = file.readLine();
-//        QString str(line);
-//        result += str;
-//    }
-//     QTextCodec::setCodecForTr(QTextCodec::codecForLocale());
-//    qDebug()<< QObject::tr(result);
 
 
        if (file.open(QFile::ReadOnly | QFile::Text))
@@ -111,7 +98,6 @@ void MainDialog::showLog(const int &row)
              QTextStream toText(&file);
            //设置文件流编码方式
                toText.setCodec("GBK");
-//               textEdit->setPlainText(toText.readAll());
                logLabel->setText((toText.readAll()));
                logLabel->show();
          }
@@ -135,14 +121,8 @@ void MainDialog::slot_requestBtnClicked()
     QString startTime = ui->startTimeEdit->text();
     QString endTime = ui->endTimeEdit->text();
 
-//    qDebug() << "开始请求api接口:" << strUrl;
-//    qDebug() << "标题" << title;
-//    qDebug() << "超时时间" << outTime;
-//    qDebug() << "时间间隔" << timeInterval;
-//    qDebug() << "开始时间" << ui->startTimeEdit->text();
-//    qDebug() << "结束时间" << ui->endTimeEdit->text();
-
-    connect(pHttpFun,SIGNAL(signal_requestFinished(bool,const QString&)), //http请求结束信号
+    //http请求结束信号
+    connect(pHttpFun,SIGNAL(signal_requestFinished(bool,const QString&)),
             this,SLOT(slot_requestFinished(bool,const QString&)));
     //发送请求
     pHttpFun->init(strUrl,outTime,timeInterval,startTime,endTime,title);
@@ -158,14 +138,10 @@ void MainDialog::slot_requestFinished(bool bSuccess, const QString &strResult)
     if(bSuccess)
     {
         qDebug()<< strResult;
-//        ui->textBrowser->append(strResult);
-//        ui->resultEdit->append(strResult); //纯文本显示
     }
     else
     {
         qDebug() << "请求失败！";
-//        ui->textBrowser->append("请求失败！");
-//        ui->resultEdit->append(tr("请求失败！"));
     }
 
 }
@@ -210,21 +186,6 @@ void MainDialog::slot_flushWidget()
 }
 
 
-//写入文件测试
-//void MainDialog::on_pushButton_clicked()
-//{
-
-//     QString fileName = "1.txt";
-//     QString str="0000000nnnnnnnnnnnnnnnn";
-//     QFile file(fileName);
-//     if(!file.open(QIODevice::WriteOnly  | QIODevice::Text|QIODevice::Append))
-//     {
-//        QMessageBox::warning(this,"sdf","can't open",QMessageBox::Yes);
-//     }
-//     QTextStream in(&file);
-//     in<<str<<"\n";
-//     file.close();
-//}
 
 //全部暂停
 void MainDialog::on_allStopPbtn_clicked()
@@ -264,17 +225,5 @@ void MainDialog::on_allStartPbtn_clicked()
 
 
 
-//void MainDialog::on_pushButton_2_clicked()
-//{
-
-//    QDateTime time = QDateTime::currentDateTime();//获取系统现在的时间
-//    QString str = time.toString("hh:mm:ss"); //设置显示格式
-
-//    ui->textBrowser->append(str);
-
-//    HttpFun* pHttpFun = new HttpFun();
-//    ui->textBrowser->append(QString::number(pHttpFun->judgeTime("17:50:50","17:52:52")));
-
-//}
 
 

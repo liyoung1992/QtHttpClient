@@ -24,7 +24,8 @@ public:
     void init(const QString& strUrl,const int& outTime,const int& intervalTimer,
                const QString& startTimer,const QString& endTimer,const QString& title);
     //根据url发起http请求
-    void sendRequest(const QString& strUrl,const int& outTime,const int& intervalTimer,const QString& startTimer,const QString& endTimer);
+    void sendRequest(const QString& strUrl,const int& outTime,const int& intervalTimer,
+                     const QString& startTimer,const QString& endTimer);
     //点击暂停，关闭时间间隔的定时器
     void closeIntervalTimer();
     //点击开始，时间间隔定时器
