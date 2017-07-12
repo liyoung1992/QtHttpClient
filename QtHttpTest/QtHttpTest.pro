@@ -14,12 +14,16 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         MainDialog.cpp \
-    HttpFun.cpp
+    HttpFun.cpp \
+    EditWidget.cpp
 
 HEADERS  += MainDialog.h \
-    HttpFun.h
+    HttpFun.h \
+    EditWidget.h \
+    json/src/json.hpp
 
-FORMS    += MainDialog.ui
+FORMS    += MainDialog.ui \
+    EditWidget.ui
 
 RESOURCES += \
     images.qrc

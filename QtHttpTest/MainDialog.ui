@@ -195,6 +195,16 @@
         </spacer>
        </item>
        <item>
+        <widget class="QCheckBox" name="checkBox">
+         <property name="text">
+          <string>是否开启log日志</string>
+         </property>
+         <property name="checked">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QPushButton" name="allStopPbtn">
          <property name="text">
           <string>全部暂停</string>
@@ -205,6 +215,13 @@
         <widget class="QPushButton" name="allStartPbtn">
          <property name="text">
           <string>全部开始</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="savepbtn">
+         <property name="text">
+          <string>保存请求配置</string>
          </property>
         </widget>
        </item>

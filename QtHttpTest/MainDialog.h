@@ -7,9 +7,12 @@
 #include <QDateTime>
 #include <QLabel>
 #include <QTimer>
+#include "EditWidget.h"
 namespace Ui {
 class MainDialog;
 }
+
+const QString data_file_name = "data/request_data.txt";
 
 //主窗口
 class MainDialog : public QDialog
@@ -20,6 +23,8 @@ public:
     explicit MainDialog(QWidget *parent = 0);
     ~MainDialog();
 
+    //刷新界面
+    void updateRequestInfo();
 private:
     //添加到所有列表
     void addItemToWidget(const QString &strUrl,const QString &title,const int &outTime,
@@ -28,6 +33,19 @@ private:
     void deleteItem(const int &row);
     //查看日志
     void showLog(const int &row);
+    //点击开始按钮
+    void startRequest(int row,int col);
+    //编辑请求
+    void editRequest(int row,int col);
+    //停止请求
+    void stopRequest(int row,int col);
+    //删除请求
+    void delRequest(int row,int col);
+    //加载数据
+    void loadData();
+
+protected:
+    void closeEvent(QCloseEvent *);
 
 private slots:
     //请求按钮点击
@@ -44,6 +62,10 @@ private slots:
     void on_allStartPbtn_clicked();
 
 
+
+    void on_savepbtn_clicked();
+
+    void on_checkBox_clicked(bool checked);
 
 private:
     Ui::MainDialog *ui;
